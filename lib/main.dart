@@ -9,6 +9,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Onboarding Samaria P',
-        home: SlideShowPage());
+        home: SlideshowPage());
   }
 }
