@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+
 import 'package:provider/provider.dart';
 
 import '../models/slider_model.dart';
 
 class Slideshow extends StatelessWidget {
+  final List<Widget> slides;
+
+  Slideshow({@required this.slides});
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (_) => new SliderModel(),
       child: Center(
         child: Column(
-          children: <Widget>[Expanded(child: _Slides()), _Dots()],
+          children: <Widget>[Expanded(child: _Slides(this.slides)), _Dots()],
         ),
       ),
     );
@@ -59,6 +63,10 @@ class _Dot extends StatelessWidget {
 //--------------Slides------------------------------------------
 
 class _Slides extends StatefulWidget {
+  final List<Widget> slides;
+
+  _Slides(this.slides);
+
   @override
   __SlidesState createState() => __SlidesState();
 }
@@ -70,8 +78,6 @@ class __SlidesState extends State<_Slides> {
   void initState() {
     super.initState();
     pageViewController.addListener(() {
-      //print('Pagina actual: ${pageViewController.page}');
-      //Actulizar el provider, la instancia de la clase
       Provider.of<SliderModel>(context, listen: false).currentPage =
           pageViewController.page;
     });
@@ -88,27 +94,29 @@ class __SlidesState extends State<_Slides> {
     return Container(
       child: PageView(
         controller: pageViewController,
-        children: <Widget>[
+        /*children: <Widget>[
           _Slide('assets/svg/slide-1.svg'),
           _Slide('assets/svg/slide-2.svg'),
           _Slide('assets/svg/slide-3.svg'),
-        ],
+        ],*/
+        children: widget.slides.map((slide) => _Slide(slide)).toList(),
       ),
     );
   }
 }
 
 class _Slide extends StatelessWidget {
-  final String svg;
+  final Widget slide;
 
-  _Slide(this.svg);
+  _Slide(this.slide);
+
   @override
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
       height: double.infinity,
       padding: EdgeInsets.all(30),
-      child: SvgPicture.asset(svg),
+      child: slide,
     );
   }
 }
